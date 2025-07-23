@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { GetStaticProps } from "next";
+import Link from 'next/link';
 
 type Post = {
   userId: number;
@@ -8,21 +7,16 @@ type Post = {
   body: string;
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const posts = await res.json();
+async function getPosts(): Promise<Post[]> {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+  return res.json();
+}
 
-  return {
-    props: {
-      posts,
-    },
-  };
-};
-
-export default function Home({ posts }: { posts: Post[] }) {
+export default async function Home() {
+  const post = await getPosts();
   return (
     <main className="flex min-h-screen flex-col p-24 space-y-4">
-      {posts.map((post) => (
+      {post.map((post) => (
         <Link
           href={`/post/${post.id}`}
           key={post.id}
